@@ -1,7 +1,64 @@
+/*
+
+
+                Birzeit University
+            Department of Computer Science
+                    COMP2421
+            Data Structures And Algoritims 
+
+            Project #1
+
+            Student ID: 1201180
+
+            Contact: contact@ibraheemalyan.dev
+            Portfolio: https://www.ibraheemalyan.dev/
+
+By
+  ___ _               _                              _    _
+ |_ _| |__  _ __ __ _| |__   ___  ___ _ __ ___      / \  | |_   _  __ _ _ __
+  | || '_ \| '__/ _` | '_ \ / _ \/ _ \ '_ ` _ \    / _ \ | | | | |/ _` | '_ \
+  | || |_) | | | (_| | | | |  __/  __/ | | | | |  / ___ \| | |_| | (_| | | | |
+ |___|_.__/|_|  \__,_|_| |_|\___|\___|_| |_| |_| /_/   \_\_|\__, |\__,_|_| |_|
+                                                            |___/
+
+
+*/
+
+/*
+
+        Run the code in ANSI-compatible Terminal 
+        e.g : cmd, powershell,  bash, zsh, macos terminal, iterm, iterm2
+
+        Color Codes
+
+Black: \033[0;30m
+Red: \033[0;31m
+Green: \033[0;32m
+Yellow: \033[0;33m
+Blue: \033[0;34m
+Magenta: \033[0;35m
+Cyan: \033[0;36m
+White: \033[0;37m
+
+        Style
+
+Normal: \033[0;3?m
+Bold:   \033[1;3?m
+
+
+Reset: \033[0m
+
+*/
+
+// Author: Ibraheem Alyan
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+// /////////////////////////////////////////////////
+// ////////////////////// Define Structs
+// /////////////////////////////////////////////////
 
 struct Node {
 	char key[50];
@@ -222,26 +279,33 @@ int main()
 
 	BST root = NULL;
 
+    printf("Running ...\n\n\n");
+    printf("\033[1;032mBy\n  ___ _               _                              _    _                   \n |_ _| |__  _ __ __ _| |__   ___  ___ _ __ ___      / \\  | |_   _  __ _ _ __  \n  | || '_ \\| '__/ _` | '_ \\ / _ \\/ _ \\ '_ ` _ \\    / _ \\ | | | | |/ _` | '_ \\ \n  | || |_) | | | (_| | | | |  __/  __/ | | | | |  / ___ \\| | |_| | (_| | | | |\n |___|_.__/|_|  \\__,_|_| |_|\\___|\\___|_| |_| |_| /_/   \\_\\_|\\__, |\\__,_|_| |_|\n                                                            |___/              \033[0m");
+
+    printf("\n\n\n\n\n\033[1;032mHIT ENTER\033[0m to read the data from dictionary.txt  \n\n\n ");
+
+    char trash;
+    scanf("%c", &trash);
+
+    root = read_file(root);
 
     /////// sample testing data
 
-	root = insert(root, "hh", "H");
-    root = insert(root, "cc", "C");
-    root = insert(root, "dd", "D");
-    root = insert(root, "jb", "JA");
-    root = insert(root, "aa", "A");
-    root = insert(root, "jj", "J");
-    root = insert(root, "kk", "K");
-    root = insert(root, "ii", "I");
-    root = insert(root, "ab", "AB");
-    root = insert(root, "ac", "AC");
-    root = insert(root, "jm", "JM");
-    root = insert(root, "jk", "JK");
-    root = insert(root, "ja", "JA");
-    root = insert(root, "jj", "JA");
-    root = insert(root, "ad", "AD");
-
-    // read_file(root);
+	// root = insert(root, "hh", "H");
+    // root = insert(root, "cc", "C");
+    // root = insert(root, "dd", "D");
+    // root = insert(root, "jb", "JA");
+    // root = insert(root, "aa", "A");
+    // root = insert(root, "jj", "J");
+    // root = insert(root, "kk", "K");
+    // root = insert(root, "ii", "I");
+    // root = insert(root, "ab", "AB");
+    // root = insert(root, "ac", "AC");
+    // root = insert(root, "jm", "JM");
+    // root = insert(root, "jk", "JK");
+    // root = insert(root, "ja", "JA");
+    // root = insert(root, "jj", "JA");
+    // root = insert(root, "ad", "AD");
 
     show_menu(root);
 
@@ -565,7 +629,7 @@ void traverse_inorder(BST root)
 {
 	if (root != NULL) {
 		traverse_inorder(root->left);
-		printf("(%s):[%s] \n", root->key, root->meaning);
+		printf("(%s): %s\n", root->key, root->meaning);
 		traverse_inorder(root->right);
 	}
 }
@@ -576,7 +640,7 @@ void print_word(BST node){
         return;
     }
 
-    printf("(%s):[%s\n", node->key, node->meaning);
+    printf("(%s): %s\n", node->key, node->meaning);
 
 }
 
@@ -594,7 +658,7 @@ void print_tree(BST root, int level)
             return;
         }
 
-        // printf("(%s):[%s] \n\n", root->key, root->meaning);
+        // printf("(%s): %s] \n\n", root->key, root->meaning);
         printf("(%s) \n\n", root->key);
 
 
