@@ -141,7 +141,7 @@ BST leftMost(BST root)
 	BST current = root;
 
 	// keep going left until the leaf
-	while (current != NULL && current->left != NULL){ // TODO remove first != NULL if unneeded
+	while (current != NULL && current->left != NULL){
 		current = current->left;
     }
 
