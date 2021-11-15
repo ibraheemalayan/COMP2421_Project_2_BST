@@ -423,7 +423,7 @@ void show_menu(BST root)
         printf("\033[0;31m7 \033[0m: Delete a word from the dictionary \n");
         printf("\033[0;31m8 \033[0m: Delete all words that start with a specific letter \n");
 
-        printf("\033[0;31m9 \033[0m: Save all words back in file dictionary.txt \n");
+        printf("\033[0;31m9 \033[0m: Save all words back in file dictionary_out.txt \n");
 
         printf("\n\033[0;31mq \033[0m: Quit\n");
 
@@ -489,7 +489,7 @@ void show_menu(BST root)
             break;
 
         case 9:
-            print_heading("Save all words back in file dictionary.txt");
+            print_heading("Save all words back in file dictionary_out.txt");
 
             write_to_file(root);
             
