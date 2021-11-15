@@ -31,6 +31,7 @@ void print_word(BST node);
 void print_tree(BST root, int level);
 void print_err(char msg[50]);
 void print_heading(char heading[]);
+BST read_file(BST root);
 
 
 // /////////////////////////////////////////////////
@@ -157,65 +158,78 @@ BST delete_node(BST Tree, char key[50])
 
 int main()
 {
-	//  Let us create following BST
-	// 	       hh
-    //      /      \
-	//  	/	     \
-	//    cc	     jj
-	//    / \       / \
-	//   aa dd     ii kk 
 
 	BST root = NULL;
-	root = insert(root, "hh", "H");
-    root = insert(root, "cc", "C");
-    root = insert(root, "dd", "D");
-    root = insert(root, "aa", "A");
-    root = insert(root, "jj", "J");
-    root = insert(root, "kk", "K");
-    root = insert(root, "ii", "I");
-    root = insert(root, "ab", "AB");
-    root = insert(root, "ac", "AC");
-    root = insert(root, "jm", "JM");
-    root = insert(root, "jk", "JK");
-    root = insert(root, "ja", "JA");
-    root = insert(root, "ad", "AD");
 
-	// printf("Tree \n\n\n");
-	// print_tree(root, 0);
+
+    /////// sample testing data
+
+	// root = insert(root, "hh", "H");
+    // root = insert(root, "cc", "C");
+    // root = insert(root, "dd", "D");
+    // root = insert(root, "aa", "A");
+    // root = insert(root, "jj", "J");
+    // root = insert(root, "kk", "K");
+    // root = insert(root, "ii", "I");
+    // root = insert(root, "ab", "AB");
+    // root = insert(root, "ac", "AC");
+    // root = insert(root, "jm", "JM");
+    // root = insert(root, "jk", "JK");
+    // root = insert(root, "ja", "JA");
+    // root = insert(root, "ad", "AD");
+
+    read_file(root);
 
     show_menu(root);
-
-	// printf("\nDelete jj\n");
-	// root = delete_node(root, "jj");
-	// print_tree(root, 0);
-
-    // printf("\nInsert jl\n");
-	// root = insert(root, "jl", "JLß");
-	// print_tree(root, 0);
-
-	// printf("\nDelete dd\n");
-	// root = delete_node(root, "dd");
-	// print_tree(root, 0);
-
-	// printf("\nDelete hh\n");
-	// root = delete_node(root, "hh");
-	// print_tree(root, 0);
-
-    // printf("\nIn Order \n\n");
-	// traverse_inorder(root);
-
-    // printf("\nSearch for hh \n\n");
-    // print_word(search(root, "hh"));
-
-    // printf("\nSearch for jl \n\n");
-    // print_word(search(root, "jl"));
-
-    // printf("\nSearch for ac \n\n");
-    // print_word(search(root, "ac"));
 
 	return 0;
 }
 
+// /////////////////////////////////////////////////
+// ////////////////////// File functions
+// /////////////////////////////////////////////////
+
+BST read_file(BST root){
+
+
+    char filename[20] = "dictionary.txt";
+
+    FILE* fptr = fopen(filename, "r");
+
+    char word[50], meaning[200], line[600];
+
+    while(fgets(line, sizeof(char) * 600, fptr)){
+
+        int chars_now;
+        int chars_consumed = 0;
+    
+        int args_read = sscanf( line + chars_consumed, "%*d. %[^:]: %[^\t\n0123456789]%n", word, meaning, &chars_now);
+
+        
+     
+        while ( args_read > 0 ) {
+    
+            chars_consumed += chars_now;
+            
+            printf("inserting word >%s< with meaning >%s<\n", word, meaning);
+            printf("  ");
+    
+            root = insert(root, word, meaning);
+
+            args_read = sscanf( line + chars_consumed, "%*d. %[^:]: %[^\t\n0123456789]%n", word, meaning, &chars_now);
+        }
+
+        // if (!fgets(line, sizeof(char) * 600, fptr)){
+        //     break;
+        // };
+    
+    }
+
+    fclose(fptr);
+
+    return root;
+    
+}
 
 // /////////////////////////////////////////////////
 // ////////////////////// Menu
@@ -388,14 +402,15 @@ BST cmd_4(BST root){
         return root;
     }
 
-    printf("Enter the meaning : ");
-
     char trash;
     scanf("%c", &trash);
 
+    printf("Enter the meaning : ");
+
     char meaning[200];
 
-    scanf("%s", meaning);
+    fgets(meaning, sizeof(char) * 200, stdin);
+    sscanf(meaning, "%[^\n]", meaning);
 
     return insert(root, key, meaning);
 }
