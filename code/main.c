@@ -25,13 +25,19 @@ void show_menu(BST root);
 void cmd_2(BST root);
 void cmd_3(BST root);
 BST cmd_4(BST root);
+void cmd_6(BST root);
 BST cmd_7(BST root);
+BST cmd_8(BST root);
 void traverse_inorder(BST root);
 void print_word(BST node);
 void print_tree(BST root, int level);
 void print_err(char msg[50]);
 void print_heading(char heading[]);
 BST read_file(BST root);
+void print_starts_with(BST Tree, char k);
+BST delete_starts_with(BST Tree, char k);
+void write_to_file(BST root);
+int write_word(BST node, FILE * fptr, int index);
 
 
 // /////////////////////////////////////////////////
@@ -110,6 +116,61 @@ BST search(BST Tree, char key[50]){
 
 }
 
+void print_starts_with(BST Tree, char k){
+
+    // If tree is empty (or reached a leaf in recursion)
+	if (Tree == NULL){
+        return;
+    }
+
+	if (k < Tree -> key[0]){ // k is smaller than first char of current tree root
+
+        print_starts_with(Tree->left, k);
+
+    }
+	else if (k > Tree -> key[0]){ // k is greater than first char of current tree root
+
+		print_starts_with(Tree->right, k);
+
+    }else{ // equal
+
+        print_starts_with(Tree->left, k);
+        print_word(Tree);
+        print_starts_with(Tree->right, k);
+
+    }
+}
+
+BST delete_starts_with(BST Tree, char k){
+
+    // If tree is empty (or reached a leaf in recursion)
+	if (Tree == NULL){
+        return Tree;
+    }
+
+	if (k < Tree -> key[0]){ // k is smaller than first char of current tree root
+
+        Tree->left = delete_starts_with(Tree->left, k);
+
+    }
+	else if (k > Tree -> key[0]){ // k is greater than first char of current tree root
+
+		Tree->right = delete_starts_with(Tree->right, k);
+
+    }else{ // equal
+
+        Tree->left = delete_starts_with(Tree->left, k);
+        Tree->right = delete_starts_with(Tree->right, k);
+
+        printf("\ndeleting word %s\n", Tree -> key);
+
+        return delete_node(Tree, Tree->key);
+
+    }
+
+    return Tree;
+}
+
 BST delete_node(BST Tree, char key[50])
 {
 
@@ -164,21 +225,23 @@ int main()
 
     /////// sample testing data
 
-	// root = insert(root, "hh", "H");
-    // root = insert(root, "cc", "C");
-    // root = insert(root, "dd", "D");
-    // root = insert(root, "aa", "A");
-    // root = insert(root, "jj", "J");
-    // root = insert(root, "kk", "K");
-    // root = insert(root, "ii", "I");
-    // root = insert(root, "ab", "AB");
-    // root = insert(root, "ac", "AC");
-    // root = insert(root, "jm", "JM");
-    // root = insert(root, "jk", "JK");
-    // root = insert(root, "ja", "JA");
-    // root = insert(root, "ad", "AD");
+	root = insert(root, "hh", "H");
+    root = insert(root, "cc", "C");
+    root = insert(root, "dd", "D");
+    root = insert(root, "jb", "JA");
+    root = insert(root, "aa", "A");
+    root = insert(root, "jj", "J");
+    root = insert(root, "kk", "K");
+    root = insert(root, "ii", "I");
+    root = insert(root, "ab", "AB");
+    root = insert(root, "ac", "AC");
+    root = insert(root, "jm", "JM");
+    root = insert(root, "jk", "JK");
+    root = insert(root, "ja", "JA");
+    root = insert(root, "jj", "JA");
+    root = insert(root, "ad", "AD");
 
-    read_file(root);
+    // read_file(root);
 
     show_menu(root);
 
@@ -211,8 +274,7 @@ BST read_file(BST root){
     
             chars_consumed += chars_now;
             
-            printf("inserting word >%s< with meaning >%s<\n", word, meaning);
-            printf("  ");
+            printf("inserting word (%s)\n", word);
     
             root = insert(root, word, meaning);
 
@@ -228,6 +290,40 @@ BST read_file(BST root){
     fclose(fptr);
 
     return root;
+    
+}
+
+void write_to_file(BST root){
+
+    FILE * fptr  = fopen("dictionary_out.txt", "w");
+
+    write_word(root, fptr, 1);
+
+    fclose(fptr);
+
+}
+
+int write_word(BST node, FILE * fptr, int index){
+
+    if (node == NULL){
+        return index;
+    }
+
+    char line[300];
+
+    sprintf(line, "%d. %s: %s\t", index, node->key, node->meaning);
+
+    index += 1;
+
+    fputs(line, fptr);
+
+    if ( index % 4 == 0 ){ // print each 4 on a line
+        fputs("\n", fptr);
+    }
+
+    index = write_word(node -> left, fptr, index);
+
+    return write_word(node -> right, fptr, index);
     
 }
 
@@ -310,6 +406,8 @@ void show_menu(BST root)
         case 6:
             print_heading("Print all words that start with a specific character in an alphabetic order");
 
+            cmd_6(root);
+
             break;
 
         case 7:
@@ -321,11 +419,15 @@ void show_menu(BST root)
 
         case 8:
             print_heading("Delete all words that start with a specific letter");
+
+            root = cmd_8(root);
             
             break;
 
         case 9:
             print_heading("Save all words back in file dictionary.txt");
+
+            write_to_file(root);
             
             break;
 
@@ -415,6 +517,20 @@ BST cmd_4(BST root){
     return insert(root, key, meaning);
 }
 
+void cmd_6(BST root){
+
+    printf("Enter character : ");
+
+    char trash;
+    scanf("%c", &trash);
+
+    char k;
+    scanf("%c", &k);
+
+    print_starts_with(root, k);
+    
+}
+
 BST cmd_7(BST root){
 
     printf("Enter Word : ");
@@ -423,6 +539,20 @@ BST cmd_7(BST root){
     scanf("%s", key);
 
     return delete_node(root, key);
+    
+}
+
+BST cmd_8(BST root){
+
+    printf("Enter character : ");
+
+    char trash;
+    scanf("%c", &trash);
+
+    char k;
+    scanf("%c", &k);
+
+    return delete_starts_with(root, k);
     
 }
 
@@ -446,7 +576,7 @@ void print_word(BST node){
         return;
     }
 
-    printf("(%s):[%s] \n", node->key, node->meaning);
+    printf("(%s):[%s\n", node->key, node->meaning);
 
 }
 
